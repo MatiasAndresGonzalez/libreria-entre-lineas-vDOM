@@ -1,0 +1,110 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: #fafafa;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  background-color: #4a90e2;
+  margin-top: 0;
+  padding: 1rem 3rem;
+}
+
+.contenedor{
+  margin: 15px;
+}
+
+#lista-libros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 220px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #357abd;
+}
+
+.titulo{
+  margin-bottom: 10px;
+}
+
+.resta, .suma, .vaciar{
+  font-weight: 800;
+}
+
+button.rojo{
+  background-color: rgb(249, 14, 14);
+  font-weight: 800;
+}
+
+button.rojo:hover{
+  background-color:rgb(205, 0, 0);
+}
+
+.hidden{
+  visibility: hidden;
+}
+
+
+@media (max-width: 600px) {
+
+  h2{
+    font-size: 1.1rem;
+  }
+
+  h3, p{
+    font-size: .7rem;
+    padding-bottom: 0;
+    margin-top: 5px;
+  }
+  .card {
+  width: 120px;
+}
+
+.card img {
+  width: 100%;
+  height: 100px;
+}
+
+button{
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.titulo{
+  font-size: .7rem;
+}
+}
