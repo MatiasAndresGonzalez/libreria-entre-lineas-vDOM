@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preguntas Frecuentes | Librería Entre Líneas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- nuevo maca: NAVBAR fijo con menú y carrito -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="/img/logo.png" alt="Logo de la librería"><span>Entre Líneas</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="preguntas.html">Preguntas</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <button id="carrito-icono" class="carrito-btn" aria-expanded="false"> 🛒 <span id="contador-carrito" style="display: none;"></span></button>
+    <!-- nuevo m: DROPDOWN del carrito que se despliega hacia abajo -->
+    <div id="carrito-container" class="carrito-dropdown oculto" aria-label="Mini carrito">
+      <div id="carrito"></div> <!-- nuevo maca: líneas del carrito -->
+      <p id="total"></p> <!-- nuevo m: total -->
+    </div>
+  </header>
+<section class="faq">
+  <h2>Preguntas Frecuentes</h2>
+
+  <div class="acordeon">
+    <div class="acordeon-item">
+      <button class="acordeon-titulo">¿Cómo realizo la compra?</button>
+      <div class="acordeon-contenido">
+        Podés agregar los libros al carrito y confirmar la compra desde allí.
+      </div>
+    </div>
+
+    <div class="acordeon-item">
+      <button class="acordeon-titulo">¿Cuáles son los medios de pago?</button>
+      <div class="acordeon-contenido">
+        Aceptamos tarjetas, transferencias y efectivo en puntos de entrega.
+      </div>
+    </div>
+
+    <div class="acordeon-item">
+      <button class="acordeon-titulo">¿Cuánto demora el envío?</button>
+      <div class="acordeon-contenido">
+        El envío demora entre 2 y 5 días hábiles según tu ubicación.
+      </div>
+    </div>
+  </div>
+</section>
+
+ 
+  <footer>
+    <p>© 2025 Librería Entre Líneas</p>
+  </footer>
+  <script>
+    // nuevo maca: preguntas -> abre/cierra modales individuales
+    document.querySelectorAll('.faq-item').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.dataset.faq;
+        document.getElementById('modal-'+id).classList.remove('oculto');
+      });
+    });
+    document.querySelectorAll('.cerrar-modal').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.dataset.close;
+        document.getElementById('modal-'+id).classList.add('oculto');
+      });
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda | Librería Entre Líneas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- nuevo m: NAVBAR fijo con menú y carrito -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="/img/logo.png" alt="Logo de la librería"><span>Entre Líneas</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="preguntas.html">Preguntas</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <button id="carrito-icono" class="carrito-btn" aria-expanded="false"> 🛒 <span id="contador-carrito" style="display: none;"></span></button> <!-- prueba piloto: matias-->
+    <!-- nuevo m: DROPDOWN del carrito que se despliega hacia abajo -->
+    <div id="carrito-container" class="carrito-dropdown oculto" aria-label="Mini carrito">
+      <div id="carrito"></div> <!-- nuevo m: líneas del carrito -->
+      <p id="total"></p> <!-- nuevo m: total -->
+    </div>
+  </header>
+
+  <main id="tienda" class="contenedor">
+    <h2>Catálogo</h2>
+    <div id="lista-libros"></div>
+  </main>
+  <footer>
+    <p>© 2025 Librería Entre Líneas</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

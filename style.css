@@ -1,110 +1,308 @@
-body {
+/* =========================
+   ESTILO GENERAL 
+   Paleta:
+   - Verde musgo: #7A8C4D
+   - Verde hover/oliva: #65773E
+   - Beige cálido: #F5EEDC
+   - Texto gris cálido: #3F3F3F
+   ========================= */
+
+* { box-sizing: border-box; }
+
+body{
   font-family: 'Poppins', sans-serif;
   margin: 0;
-  background-color: #fafafa;
-  color: #333;
+  background: #F5EEDC;      /* beige */
+  color: #3F3F3F;           /* texto gris cálido */
+  line-height: 1.5;
 }
 
-h1 {
-  text-align: center;
-  color: white;
-  background-color: #4a90e2;
-  margin-top: 0;
-  padding: 1rem 3rem;
+/* =========================
+   NAVBAR
+   ========================= */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#7A8C4D;   /* verde musgo */
+  color:#fff;
+  padding:.8rem 1.2rem;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.logo{ display:flex; align-items:center; gap:.5rem; font-weight:700; }
+.logo img{ width:40px; height:40px; border-radius:50%; border:2px solid rgba(255,255,255,.7); }
+.navbar ul{ list-style:none; display:flex; gap:1rem; margin:0; padding:0; }
+.navbar a{ color:#fff; text-decoration:none; font-weight:600; }
+.navbar a:hover{ text-decoration:underline; }
+
+/* =========================
+   BOTÓN CARRITO + DROPDOWN
+   ========================= */
+
+.carrito-btn{
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:#ffffff; color:#3F3F3F;
+  border:0; border-radius:10px; padding:.4rem .6rem;
+  cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  position:relative;
+}
+#contador-carrito{
+  background:#c0392b; color:#ffffff;
+  border-radius: 3rem; padding:0 .35rem; font-weight:700;
 }
 
-.contenedor{
-  margin: 15px;
+/* Mini carrito desplegable */
+#carrito-container {
+  max-height: 400px; 
+  overflow-y: auto;
+}
+.carrito-dropdown{
+  position:absolute; right:1rem; top:62px;
+  background:#ffffff;                 /* fondo claro */
+  color:#333333;                      /* texto oscuro */
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  padding:12px; width:320px; z-index:999;
+  border:1px solid rgba(0,0,0,.08);
+  width: 60%;
+  min-height: 350px;
+}
+.oculto{ display:none; }
+
+/* Aseguro contraste y lectura interna del carrito */
+.carrito-dropdown *{ color: inherit; }
+.carrito-dropdown #carrito,
+.carrito-dropdown .titulo,
+.carrito-dropdown p,
+.carrito-dropdown b,
+.carrito-dropdown span{
+  color:#333333;
 }
 
-#lista-libros {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
+.carrito-dropdown #total{
+  color:#222222;
+  font-weight:700;
+  margin:.5rem 0;
+}
+.carrito-dropdown .titulo{ margin-bottom:10px; }
+
+/* Botones dentro del carrito */
+.carrito-dropdown button{
+  background:#7A8C4D;       /* verde musgo */
+  color:#ffffff;
+  border:none; border-radius:8px;
+  padding:6px 10px; cursor:pointer;
+}
+.carrito-dropdown button:hover{
+  background:#65773E;       /* verde oliva hover */
+}
+.carrito-dropdown button.rojo{ background:#c0392b; }
+.carrito-dropdown button.rojo:hover{ background:#922b21; }
+
+/* Botón "Vaciar carrito" estilo neutro */
+.carrito-dropdown .vaciar{
+  background:#eaeaea; color:#333333;
+}
+.carrito-dropdown .vaciar:hover{
+  color: #eaeaea; /* agrega color de texto al boton vaciar ya que es negro inicialmente */ 
 }
 
-.card {
+/* Confirmación inline (Sí/Cancelar) */
+.confirmacion{
+  background:#f6f6f6; color:#333333;
+  border-radius:10px; padding:.5rem; margin-top:.6rem;
+  text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+.btn-secundario{
+  background:#cccccc; color:#333333; margin-left:.5rem;
+}
+
+/* =========================
+   HERO
+   ========================= */
+.hero{
+  min-height:70vh;
+  background-image:url('img/hero.png');
+  background-size:cover; background-position:center;
+  display:grid; place-items:center; text-align:center;
+}
+.hero-overlay{
+  background:rgba(245,238,220,.85); /* beige translúcido */
+  padding:2rem 1.5rem; border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+.hero h1{ color:#7A8C4D; margin:0 0 .6rem 0; font-size:2.2rem; }
+
+.btn-principal{
+  display:inline-block; background:#7A8C4D; color:#ffffff;
+  padding:.6rem 1rem; border-radius:10px;
+  text-decoration:none; font-weight:700;
+}
+.btn-principal:hover{ background:#65773E; }
+
+/* =========================
+   CONTENIDO
+   ========================= */
+main.contenedor{ margin:15px; }
+
+/* Cards catálogo */
+#lista-libros{ display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
+.card{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 220px;
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
+  width:220px; background:#ffffff; border-radius:12px; padding:10px; text-align:center;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+  border:1px solid rgba(122,140,77,.15); /* sutil tono del verde */
+}
+.card img{ width:100%; height:220px; object-fit:cover; border-radius:10px; }
+button{
+  background:#7A8C4D; color:#ffffff;
+  border:none; padding:6px 10px; border-radius:8px; cursor:pointer;
+}
+button:hover{ background:#65773E; }
+
+/* =========================
+   FAQ + MODALES
+   ========================= */
+/* --- FAQ Acordeón (ajustado y centrado) --- */
+.faq {
+  max-width: 900px;          /* centrado */
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.faq h2 {
+  color: #3F3F3F;
   text-align: center;
+  margin-bottom: 30px;
+}
+
+.acordeon {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acordeon-item {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón del acordeón */
+.acordeon-titulo {
+  width: 100%;
+  text-align: left;
+  background-color: #7A8C4D;   /* verde musgo */
+  color: #fff;
+  padding: 14px 18px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: background 0.3s;
+}
+
+.acordeon-titulo:hover {
+  background-color: #65773E;   /* oliva */
+}
+
+/* Contenido interno */
+.acordeon-contenido {
+  display: none;
+  padding: 14px 18px;
+  background-color: #F5EEDC;   /* beige */
+  color: #3F3F3F;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Al abrir */
+.acordeon-item.activo .acordeon-contenido {
+  display: block;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .faq {
+    padding: 10px;
+  }
+  .acordeon-titulo {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+}
+
+/* =========================
+   CONTACTO
+   ========================= */
+.contacto{
+  max-width:600px; margin:2rem auto;
+  background:#ffffff; padding:2rem; border-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  border:1px solid rgba(122,140,77,.15);
+}
+.contacto input, .contacto textarea{
+  width:100%; margin-bottom:1rem; padding:.6rem;
+  border:1px solid #cccccc; border-radius:8px;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+footer{
+  background:#7A8C4D; color:#ffffff;
+  text-align:center; padding:1rem;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width:600px){
+  .hero h1{ font-size:1.6rem; }
+  .card{ width:140px; }
+  .card img{ height:120px; }
+}
+.acordeon-item {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.card img {
+.acordeon-titulo {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-button {
-  background-color: #4a90e2;
-  color: white;
+  text-align: left;
+  background: #7A8C4D;
+  color: #fff;
+  padding: 12px;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: 10px 10px 0 0;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
-button:hover {
-  background-color: #357abd;
+.acordeon-titulo:hover {
+  background: #65773E;
 }
 
-.titulo{
-  margin-bottom: 10px;
+.acordeon-contenido {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid #ccc;
+  color: #3F3F3F;
+  background: #F5EEDC;
+  border-radius: 0 0 10px 10px;
 }
 
-.resta, .suma, .vaciar{
-  font-weight: 800;
+.acordeon-item.activo .acordeon-contenido {
+  display: block;
 }
 
-button.rojo{
-  background-color: rgb(249, 14, 14);
-  font-weight: 800;
-}
-
-button.rojo:hover{
-  background-color:rgb(205, 0, 0);
-}
-
-.hidden{
-  visibility: hidden;
-}
-
-
-@media (max-width: 600px) {
-
-  h2{
-    font-size: 1.1rem;
-  }
-
-  h3, p{
-    font-size: .7rem;
-    padding-bottom: 0;
-    margin-top: 5px;
-  }
-  .card {
-  width: 120px;
-}
-
-.card img {
-  width: 100%;
-  height: 100px;
-}
-
-button{
-  font-size: .7rem;
-  font-weight: 700;
-}
-
-.titulo{
-  font-size: .7rem;
-}
-}

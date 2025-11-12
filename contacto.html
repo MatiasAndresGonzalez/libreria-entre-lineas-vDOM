@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio | Librería Entre Líneas</title>
+  <title>Contacto | Librería Entre Líneas</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,18 +28,20 @@
     </div>
   </header>
 
-  <main>
-    <!-- nuevo maca: HERO con imagen cálida y overlay claro -->
-    <section class="hero" role="banner" aria-label="Nuestra tiendita de libros">
-      <div class="hero-overlay">
-        <h1>Nuestra tiendita de libros</h1>
-        <p>Donde las historias crecen como hojas y cada libro guarda una pequeña aventura.</p>
-        <a href="tienda.html" class="btn-principal">Ver Catálogo</a>
-      </div>
-    </section>
+  <main class="contacto">
+    <h2>Contacto</h2>
+    <form onsubmit="event.preventDefault(); alert('¡Gracias por escribirnos!');">
+      <label>Nombre</label>
+      <input type="text" required>
+      <label>Email</label>
+      <input type="email" required>
+      <label>Mensaje</label>
+      <textarea required></textarea>
+      <button type="submit" class="btn-principal">Enviar</button>
+    </form>
   </main>
   <footer>
-    <p>© 2025 Librería Entre Líneas — por <strong>Grupo Atlas</strong></p>
+    <p>© 2025 Librería Entre Líneas</p>
   </footer>
   <script src="script.js"></script>
 </body>

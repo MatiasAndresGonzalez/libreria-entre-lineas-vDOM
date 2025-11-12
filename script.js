@@ -82,14 +82,34 @@ const libros = [
   },
 ];
 
-const listaLibros = document.getElementById("lista-libros");
-const carritoDiv = document.getElementById("carrito");
-const totalDiv = document.getElementById("total");
-const carrito = [];
+const listaLibros = document.getElementById("lista-libros"); // nuevo maca: referencia al contenedor del catálogo
+const carritoDiv = document.getElementById("carrito"); // nuevo maca: contenedor donde se listan los ítems del carrito
+const totalDiv = document.getElementById("total"); // nuevo maca: contenedor del total del carrito
+const iconoCarrito = document.getElementById("carrito-icono"); // nuevo maca: botón en navbar
+const carritoContainer = document.getElementById("carrito-container"); // nuevo maca: dropdown que se despliega
+
+let carrito = cargarCarritoLS(); // nuevo paul :en vez de guardar los datos en array vacio se guardan en una funcion llamada cargarCarritoLS
+
+// / **************************** LOCALSTORAGE**************************
+
+// Cargar carrito desde LocalStorage
+function cargarCarritoLS() {
+  const carritoLS = localStorage.getItem("carritoLibros");
+  return carritoLS ? JSON.parse(carritoLS) : [];
+}
+
+// Guardar carrito en LocalStorage
+function guardarCarritoLS() {
+  localStorage.setItem("carritoLibros", JSON.stringify(carrito));
+}
+
+cargarCarritoLS();
+// ************************************************************************************
 
 // Mostrar catálogo
 function mostrarLibros() {
   /* limpiamos la lista */
+  if (!listaLibros) return; // nuevo maca: evita error en páginas sin catálogo (index/preguntas/contacto)
   listaLibros.innerHTML = "";
   /* reccorremos el array libros */
   libros.forEach((libro) => {
@@ -140,11 +160,14 @@ function agregarLibro(id) {
   libro.stock--; // restamos uno al estock de libros
   mostrarLibros(); // mostramos nuevamente catalogo con sus cambios
   mostrarCarrito(); // mostramos nuevamente carrito con sus cambios
+  actualizarContador(); // nuevo maca: refresca el contador en el ícono
+  guardarCarritoLS(); // nuevo para guardar en LS
 }
 
 // mostramos carrito
 function mostrarCarrito() {
   /* iniciamos el carrito en blanco */
+  if (!carritoDiv) return; // nuevo maca: evita error si el dropdown no existe en la página
   carritoDiv.innerHTML = "";
 
   /* recorremos carrito y agregamos lo que vamos a mostrar */
@@ -160,7 +183,12 @@ function mostrarCarrito() {
 
     document
       .getElementById(`disminuye-${item.id}`)
-      .addEventListener("click", () => restaCantidad(item.id));
+      .addEventListener("click", () => {
+        restaCantidad(item.id);
+        if(actualizarContador === 0){
+          carritoContainer.classList.toggle("oculto");
+        }
+      });
 
     document
       .getElementById(`aumenta-${item.id}`)
@@ -172,25 +200,25 @@ function mostrarCarrito() {
   });
 
   /* agregamos un boton para poder vaciar el carrito si lo desae el usuario */
-  if (carrito.length > 0) {
+  const existenteVaciar = document.getElementById("btn-vaciar-interno"); // nuevo maca: evita duplicar el botón
+  if (carrito.length > 0 && !existenteVaciar) {
     const vaciar = document.createElement("button");
+    vaciar.id = "btn-vaciar-interno"; // nuevo maca
     vaciar.classList.add("vaciar");
-    /* agregamos el texto del boton */
     vaciar.textContent = `Vaciar carrito`;
-    /* agregamos el boton como hijo de carritoDiv */
     carritoDiv.appendChild(vaciar);
 
+    // ---------------------- código viejo (sin vigencia) ----------------------
+    /*
     vaciar.addEventListener("click", () => {
-      let alertaVaciar = prompt(`si desea borrar el carrito presione S`)
-        .trim()
-        .toLowerCase();
+      let alertaVaciar = prompt(`si desea borrar el carrito presione S`);
+      if (alertaVaciar === null) return;
+      alertaVaciar = alertaVaciar.trim().toLowerCase();
 
-      while (alertaVaciar.trim().toLowerCase() !== "s") {
-        alertaVaciar = prompt(
-          `si desea borrar el carrito presione S`
-        ).toLowerCase();
-
+      while (alertaVaciar !== "s") {
+        alertaVaciar = prompt(`si desea borrar el carrito presione S`);
         if (alertaVaciar === null) return;
+        alertaVaciar = alertaVaciar.trim().toLowerCase();
       }
 
       carrito.forEach((item) => {
@@ -201,18 +229,58 @@ function mostrarCarrito() {
       carrito.length = 0;
       mostrarCarrito();
       mostrarLibros();
+      actualizarContador();
     });
+    */
+    // ------------------------------------------------------------------------
+    // nuevo maca: confirmación visual dentro del carrito (sin modal ni prompt)
+    // nuevo matias: sacamos del evento la creacion del tag div para que no se duplique cada vez que se hace clic
+  const confirmacion = document.createElement("div");
+  confirmacion.classList.add("confirmacion");
+    vaciar.addEventListener("click", () => {
+      confirmacion.innerHTML = `
+        <p>Estas seguro que deseas viaciar el carrito.</p>
+        <button id="confirmar-vaciar" class="btn-principal">Confirmar</button>
+        <button id="cancelar-vaciar" class="btn-secundario">Cancelar</button>
+      `;
+      carritoDiv.appendChild(confirmacion);
+      
+      document
+        .getElementById("confirmar-vaciar")
+        .addEventListener("click", () => {
+          carrito.forEach((item) => {
+            const libroOriginal = libros.find((l) => l.id === item.id);
+            libroOriginal.stock += item.cantidad;
+          });
+          carrito.length = 0;
+          carritoContainer.classList.toggle("oculto"); // nuevo matias: oculta el carrito al vaciarlo
+          guardarCarritoLS(); // Agregado para cambiar el estado del carrito con LS
+          mostrarCarrito();
+          mostrarLibros();
+          actualizarContador();
+        });
+
+      document
+        .getElementById("cancelar-vaciar")
+        .addEventListener("click", () => {
+          confirmacion.remove();
+        });
+    });
+  
   }
 
   /* sacamos la cuenta del total con el metodo reduce */
-
   const total = carrito.reduce((acc, l) => acc + l.subtotal, 0);
   /* cargamos el total como texto de totalDiv */
-  if (total > 0) {
-    totalDiv.textContent = `Total: $${total}`;
-  } else {
-    totalDiv.textContent = "";
+  if (totalDiv) {
+    if (total > 0) {
+      totalDiv.textContent = `Total: $${total}`;
+    } else {
+      totalDiv.textContent = "";
+    }
   }
+
+  actualizarContador(); // nuevo maca: asegura que el ícono refleje la cantidad actual
 }
 
 function restaCantidad(id) {
@@ -229,6 +297,8 @@ function restaCantidad(id) {
 
   mostrarLibros();
   mostrarCarrito();
+  actualizarContador(); // nuevo maca
+  guardarCarritoLS(); //nuevo paul para LS
 }
 
 function sumaCantidad(id) {
@@ -246,6 +316,8 @@ function sumaCantidad(id) {
 
   mostrarCarrito();
   mostrarLibros();
+  actualizarContador(); // nuevo maca
+  guardarCarritoLS(); //nuevo paul para LS
 }
 
 function eliminaItem(id) {
@@ -258,8 +330,57 @@ function eliminaItem(id) {
     carrito.splice(index, 1);
   }
 
+  // nuevo matias: oculta carrito si se eliminan todos los items
+  if(carrito.length === 0){
+    carritoContainer.classList.toggle("oculto"); // oculta carritoContainer
+  }
+
   mostrarCarrito();
   mostrarLibros();
+  actualizarContador(); // ya estaba en tu versión al final, lo conservamos
+  guardarCarritoLS(); //nuevo paul para LS
 }
 
-mostrarLibros();
+//--------------------------------------------------------------- ICono Carrito ------------------------------------------------------------------
+
+iconoCarrito &&
+  iconoCarrito.addEventListener("click", () => {
+    // nuevo maca: protector por si no existe
+    carritoContainer.classList.toggle("oculto"); // nuevo maca: muestra/oculta el mini carrito
+  });
+
+function actualizarContador() {
+  const contador = document.getElementById("contador-carrito");
+  const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+  // nuevo matias: verificamos si total es mayor a 0
+  if (totalItems > 0) {
+    contador.style.display = "block"; // nuevo matias: si es verdadero se muestra contador
+  } else {
+    contador.style.display = "none"; // nuevo matias: si es falso se oculta contador
+  }
+  if (contador) contador.textContent = totalItems; // nuevo maca: protector
+}
+
+//------------------------ Ajustamos el stock del catálogo con el carrito persistente  LS---
+carrito.forEach((item) => {
+  const libroOriginal = libros.find((l) => l.id === item.id);
+  if (libroOriginal) {
+    // Disminuir el stock original por la cantidad que está en el carrito persistente
+    libroOriginal.stock -= item.cantidad;
+  }
+});
+
+// nuevo maca: inicializamos de forma segura para que funcione en todas las páginas
+if (listaLibros) {
+  mostrarLibros();
+} // ahora muestra el stock corregido
+mostrarCarrito(); // nuevo maca: pinta el carrito (si existe el contenedor)
+actualizarContador(); // nuevo maca: inicia el contador en 0
+
+// --- nuevo maca: acordeón FAQ ---
+document.querySelectorAll(".acordeon-titulo").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const item = btn.parentElement;
+    item.classList.toggle("activo");
+  });
+});
