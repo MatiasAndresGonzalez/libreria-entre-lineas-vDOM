@@ -148,7 +148,7 @@ function agregarLibro(id) {
   /* verificamos si ya existe un libo cargado al carrito con ese id */
   const enCarrito = carrito.find((l) => l.id === id);
 
-  /*  */
+  /* si hay un item cargado al carrito */
   if (enCarrito) {
     enCarrito.cantidad++; // sumamos 1 a la cantiday existene en el carrito
     enCarrito.subtotal = enCarrito.cantidad * enCarrito.precio; // calculamos el el precio por la cantidad y lo guardamos en subtotal
