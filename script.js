@@ -94,13 +94,13 @@ let carrito = cargarCarritoLS(); // nuevo paul :en vez de guardar los datos en a
 
 // Cargar carrito desde LocalStorage
 function cargarCarritoLS() {
-  const carritoLS = localStorage.getItem("carritoLibros");
-  return carritoLS ? JSON.parse(carritoLS) : [];
+  const carritoLS = localStorage.getItem("carritoLibros"); // llamamos a lo que hay cargado en carritoLibros
+  return carritoLS ? JSON.parse(carritoLS) : []; // si hay algo cargado lo parsea para mostrar como array y si no debuelbe un array vacio
 }
 
 // Guardar carrito en LocalStorage
 function guardarCarritoLS() {
-  localStorage.setItem("carritoLibros", JSON.stringify(carrito));
+  localStorage.setItem("carritoLibros", JSON.stringify(carrito)); // seteamos carritoLibros
 }
 
 cargarCarritoLS();
@@ -176,94 +176,71 @@ function mostrarCarrito() {
     const titulo = document.createElement("div");
     titulo.classList.add("titulo");
 
-    titulo.innerHTML = `<b>${item.titulo}</b> <button id="disminuye-${item.id}" class="resta">-</button> x${item.cantidad} <button id="aumenta-${item.id}" class="suma">+</button> - Subtotal: $${item.subtotal} <button id="eliminarItem-${item.id}" class="rojo">X</button>`;
+    titulo.innerHTML = `<b>${item.titulo}</b> <button id="disminuye-${item.id}" class="resta">-</button> x${item.cantidad} <button id="aumenta-${item.id}" class="suma">+</button> - Subtotal: $${item.subtotal} <button id="eliminarItem-${item.id}" class="rojo">X</button>`; // insertamos por medio del metodo innerHTML lo que queremos mostrar en titulo
 
     /* agregamos el titulo como hijo del carritoDiv */
     carritoDiv.appendChild(titulo);
 
     document
-      .getElementById(`disminuye-${item.id}`)
-      .addEventListener("click", () => {
-        restaCantidad(item.id);
-        if(actualizarContador === 0){
-          carritoContainer.classList.toggle("oculto");
+      .getElementById(`disminuye-${item.id}`) // obtenemos el id del boton menos
+      .addEventListener("click", () => { // añadimos un evento clic
+        restaCantidad(item.id); // llamamos a la funcion restaCantidad que disminuye uno a la cantidad y devuelve uno al stock 
+        if(actualizarContador === 0){ // si el contador queda en 0...
+          carritoContainer.classList.toggle("oculto"); // se oculta automaticamente el carrito vacio
         }
       });
 
     document
-      .getElementById(`aumenta-${item.id}`)
-      .addEventListener("click", () => sumaCantidad(item.id));
+      .getElementById(`aumenta-${item.id}`) // obtenemos el id del boton mas
+      .addEventListener("click", () => sumaCantidad(item.id)); // añadimos un evento clic y llamamos a la funcion sumaCantidad
 
     document
-      .getElementById(`eliminarItem-${item.id}`)
-      .addEventListener("click", () => eliminaItem(item.id));
+      .getElementById(`eliminarItem-${item.id}`) // obtenemos el id del boton X
+      .addEventListener("click", () => eliminaItem(item.id)); // añadimos un evento clic y llamamos a la funcion eliminaItem
   });
 
   /* agregamos un boton para poder vaciar el carrito si lo desae el usuario */
   const existenteVaciar = document.getElementById("btn-vaciar-interno"); // nuevo maca: evita duplicar el botón
+  // si hay algo dentro de carrito y si no existe el voton vaciar
   if (carrito.length > 0 && !existenteVaciar) {
-    const vaciar = document.createElement("button");
-    vaciar.id = "btn-vaciar-interno"; // nuevo maca
-    vaciar.classList.add("vaciar");
-    vaciar.textContent = `Vaciar carrito`;
-    carritoDiv.appendChild(vaciar);
+    const vaciar = document.createElement("button"); // creamos el boton
+    vaciar.id = "btn-vaciar-interno"; // nuevo maca: le damos un id
+    vaciar.classList.add("vaciar"); // le damos una clase
+    vaciar.textContent = `Vaciar carrito`; // le añadimos texto
+    carritoDiv.appendChild(vaciar); // añadimos vaciar como hijo de carritoDiv
 
-    // ---------------------- código viejo (sin vigencia) ----------------------
-    /*
-    vaciar.addEventListener("click", () => {
-      let alertaVaciar = prompt(`si desea borrar el carrito presione S`);
-      if (alertaVaciar === null) return;
-      alertaVaciar = alertaVaciar.trim().toLowerCase();
-
-      while (alertaVaciar !== "s") {
-        alertaVaciar = prompt(`si desea borrar el carrito presione S`);
-        if (alertaVaciar === null) return;
-        alertaVaciar = alertaVaciar.trim().toLowerCase();
-      }
-
-      carrito.forEach((item) => {
-        const libroOriginal = libros.find((l) => l.id === item.id);
-        libroOriginal.stock += item.cantidad;
-      });
-
-      carrito.length = 0;
-      mostrarCarrito();
-      mostrarLibros();
-      actualizarContador();
-    });
-    */
     // ------------------------------------------------------------------------
     // nuevo maca: confirmación visual dentro del carrito (sin modal ni prompt)
     // nuevo matias: sacamos del evento la creacion del tag div para que no se duplique cada vez que se hace clic
-  const confirmacion = document.createElement("div");
-  confirmacion.classList.add("confirmacion");
-    vaciar.addEventListener("click", () => {
+  const confirmacion = document.createElement("div"); // creamos un div
+  confirmacion.classList.add("confirmacion"); // le damos una clase
+    vaciar.addEventListener("click", () => { // añadimos evento clic al boton vaciar
       confirmacion.innerHTML = `
         <p>Estas seguro que deseas viaciar el carrito.</p>
         <button id="confirmar-vaciar" class="btn-principal">Confirmar</button>
         <button id="cancelar-vaciar" class="btn-secundario">Cancelar</button>
-      `;
-      carritoDiv.appendChild(confirmacion);
+      `; // en confirmacion insertamos por medio del metodo innerHTML un texto y dos botones
+      carritoDiv.appendChild(confirmacion); // añadimos a confirmacion como hijo de carritoDiv
       
       document
-        .getElementById("confirmar-vaciar")
-        .addEventListener("click", () => {
-          carrito.forEach((item) => {
-            const libroOriginal = libros.find((l) => l.id === item.id);
-            libroOriginal.stock += item.cantidad;
+        .getElementById("confirmar-vaciar") // obtenemos el id del boton confirmar
+        .addEventListener("click", () => { // añadimos un evento clic al boton
+          carrito.forEach((item) => { // recorremos carrito
+            const libroOriginal = libros.find((l) => l.id === item.id); // obtenemos el objeto recorrido
+            libroOriginal.stock += item.cantidad; // devolvemos el stock al array original
           });
-          carrito.length = 0;
+          carrito.length = 0; // dejamos vacio el carrito
           carritoContainer.classList.toggle("oculto"); // nuevo matias: oculta el carrito al vaciarlo
           guardarCarritoLS(); // Agregado para cambiar el estado del carrito con LS
-          mostrarCarrito();
-          mostrarLibros();
-          actualizarContador();
+          mostrarCarrito(); // actualizamos la vista del carrito
+          mostrarLibros(); // mostramos nuevamente libros para que sea visible la devolucion del stock
+          actualizarContador(); // actualizamos el contador
         });
 
       document
-        .getElementById("cancelar-vaciar")
-        .addEventListener("click", () => {
-          confirmacion.remove();
+        .getElementById("cancelar-vaciar") // obtenemos el id del boton cancelar
+        .addEventListener("click", () => { // añadimos un evento clic al boton
+          confirmacion.remove(); // eliminamos el div confirmacion
         });
     });
   
@@ -272,27 +249,32 @@ function mostrarCarrito() {
   /* sacamos la cuenta del total con el metodo reduce */
   const total = carrito.reduce((acc, l) => acc + l.subtotal, 0);
   /* cargamos el total como texto de totalDiv */
-  if (totalDiv) {
-    if (total > 0) {
-      totalDiv.textContent = `Total: $${total}`;
+  if (totalDiv) { // si existe el div llamado totalDiv
+    if (total > 0) { // y el total es mayor a 0
+      totalDiv.textContent = `Total: $${total}`; // añadimos a total como contenido de totalDiv por medio del metodo textContent
     } else {
-      totalDiv.textContent = "";
+      totalDiv.textContent = ""; // si no, dejamos vacio el div de totalDiv
     }
   }
 
   actualizarContador(); // nuevo maca: asegura que el ícono refleje la cantidad actual
 }
 
-function restaCantidad(id) {
-  const item = carrito.find((l) => l.id === id);
-  const libroOriginal = libros.find((l) => l.id === id);
-  if (item.cantidad >= 1) {
-    item.cantidad--;
-    libroOriginal.stock++;
-    item.subtotal = item.cantidad * item.precio;
-  } else {
-    const index = carrito.findIndex((l) => l.id === id);
-    carrito.splice(index, 1);
+/* creamos la funcion para restar cantidad a cada item*/
+function restaCantidad(id) { // recibimos un id como parametro
+  const item = carrito.find((l) => l.id === id); // busacamos el item en carrito
+  const libroOriginal = libros.find((l) => l.id === id); // buscamos el item en el array original
+  if (item.cantidad >= 1) { // si la cantidad del item en el carrito es mayor a 0
+    item.cantidad--; // restamos uno a la cantidad
+    libroOriginal.stock++; // sumamos uno al stock
+    item.subtotal = item.cantidad * item.precio; // calculamos nuevamente el subtotal
+  } else { // si la cantidad del item en el carrito llega a 0
+    const index = carrito.findIndex((l) => l.id === id); // obtenemos el indice del item
+    carrito.splice(index, 1); // eliminamos el item del carrito con el indice obtenido
+  }
+  // nuevo matias: oculta carrito si se eliminan todos los items
+  if(carrito.length === 0){
+    carritoContainer.classList.toggle("oculto"); // oculta carritoContainer
   }
 
   mostrarLibros();
@@ -301,17 +283,18 @@ function restaCantidad(id) {
   guardarCarritoLS(); //nuevo paul para LS
 }
 
-function sumaCantidad(id) {
-  const item = carrito.find((l) => l.id === id);
-  const libroOriginal = libros.find((l) => l.id === id);
+/* creamos la funcion para sumar cantidad a cada item*/
+function sumaCantidad(id) { // recibimos un id como parametro
+  const item = carrito.find((l) => l.id === id); // busacamos el item en carrito
+  const libroOriginal = libros.find((l) => l.id === id); // buscamos el item en el array original
 
-  if (libroOriginal.stock > 0) {
-    item.cantidad++;
-    libroOriginal.stock--;
-    item.subtotal = item.cantidad * item.precio;
-  } else {
-    alert("Libro sin stock disponible");
-    return;
+  if (libroOriginal.stock > 0) { // si el stock del item en el array es mayor a 0
+    item.cantidad++; // sumamos uno a la cantidad
+    libroOriginal.stock--; // restamos uno al stock
+    item.subtotal = item.cantidad * item.precio; // calculamos nuevamente el subtotal
+  } else { // si el stock del item en el array llega a 0
+    alert("Libro sin stock disponible"); // avisamos al usuario que no hay stock
+    return; // y salimos de la funcion
   }
 
   mostrarCarrito();
@@ -320,14 +303,15 @@ function sumaCantidad(id) {
   guardarCarritoLS(); //nuevo paul para LS
 }
 
-function eliminaItem(id) {
-  const item = carrito.find((l) => l.id === id);
-  const libroOriginal = libros.find((l) => l.id === id);
-  const index = carrito.findIndex((l) => l.id === id);
+/* creamos la funcion para sumar cantidad a cada item*/
+function eliminaItem(id) { // recibimos un id como parametro
+  const item = carrito.find((l) => l.id === id); // busacamos el item en carrito
+  const libroOriginal = libros.find((l) => l.id === id); // buscamos el item en el array original
+  const index = carrito.findIndex((l) => l.id === id); // obtenemos el indice del item en el carrito
 
-  if (item) {
-    libroOriginal.stock += item.cantidad;
-    carrito.splice(index, 1);
+  if (item) { // si se encontro el item
+    libroOriginal.stock += item.cantidad; // sumamos la cantidad del item al stock del array original
+    carrito.splice(index, 1); // gracias al indice obtenido eliminamos del carrito el indice 
   }
 
   // nuevo matias: oculta carrito si se eliminan todos los items
@@ -343,16 +327,16 @@ function eliminaItem(id) {
 
 //--------------------------------------------------------------- ICono Carrito ------------------------------------------------------------------
 
-iconoCarrito &&
-  iconoCarrito.addEventListener("click", () => {
+  iconoCarrito.addEventListener("click", () => { // añade evento click al icono del carrito
     // nuevo maca: protector por si no existe
     carritoContainer.classList.toggle("oculto"); // nuevo maca: muestra/oculta el mini carrito
   });
 
+  /* creamos una funcion para el contador del carrito */
 function actualizarContador() {
-  const contador = document.getElementById("contador-carrito");
-  const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-  // nuevo matias: verificamos si total es mayor a 0
+  const contador = document.getElementById("contador-carrito"); // obtenemos el contador desde el HTML por su id
+  const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0); // cuenta los items del carrito
+  // nuevo matias: verificamos si totalItems es mayor a 0
   if (totalItems > 0) {
     contador.style.display = "block"; // nuevo matias: si es verdadero se muestra contador
   } else {
@@ -362,25 +346,18 @@ function actualizarContador() {
 }
 
 //------------------------ Ajustamos el stock del catálogo con el carrito persistente  LS---
-carrito.forEach((item) => {
-  const libroOriginal = libros.find((l) => l.id === item.id);
-  if (libroOriginal) {
+// funciona al cargar la pagina
+carrito.forEach((item) => {// recorremos el carrito (persistente) 
+  const libroOriginal = libros.find((l) => l.id === item.id); // buscamos los libros que coinciden con los items
+  if (libroOriginal) { // si hay cincidencia
     // Disminuir el stock original por la cantidad que está en el carrito persistente
-    libroOriginal.stock -= item.cantidad;
+    libroOriginal.stock -= item.cantidad; 
   }
 });
 
 // nuevo maca: inicializamos de forma segura para que funcione en todas las páginas
-if (listaLibros) {
-  mostrarLibros();
+if (listaLibros) { // si existe algo cargado en el catalogo
+  mostrarLibros(); // llamamos a la funcion para mostrar en el catalogo
 } // ahora muestra el stock corregido
 mostrarCarrito(); // nuevo maca: pinta el carrito (si existe el contenedor)
 actualizarContador(); // nuevo maca: inicia el contador en 0
-
-// --- nuevo maca: acordeón FAQ ---
-document.querySelectorAll(".acordeon-titulo").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const item = btn.parentElement;
-    item.classList.toggle("activo");
-  });
-});

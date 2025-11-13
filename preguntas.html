@@ -56,23 +56,9 @@
 
  
   <footer>
-    <p>© 2025 Librería Entre Líneas</p>
+    <p>© 2025 Librería Entre Líneas — por <strong>Grupo Atlas</strong></p>
   </footer>
-  <script>
-    // nuevo maca: preguntas -> abre/cierra modales individuales
-    document.querySelectorAll('.faq-item').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.dataset.faq;
-        document.getElementById('modal-'+id).classList.remove('oculto');
-      });
-    });
-    document.querySelectorAll('.cerrar-modal').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.dataset.close;
-        document.getElementById('modal-'+id).classList.add('oculto');
-      });
-    });
-  </script>
   <script src="script.js"></script>
+  <script src="preguntas.js"></script>
 </body>
 </html>
